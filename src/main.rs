@@ -32,7 +32,9 @@ use prelude::*;
 struct State {
     ecs: World,
     resources: Resources,
-    systems: Schedule,
+    input_system: Schedule,
+    player_system: Schedule,
+    world_system: Schedule,
 }
 
 impl State {
@@ -63,7 +65,9 @@ impl State {
         Self {
             ecs,
             resources,
-            systems: build_scheduler(),
+            input_system: build_input_scheduler(),
+            player_system: build_player_scheduler(),
+            world_system: build_world_scheduler(),
         }
     }
 }
@@ -75,7 +79,14 @@ impl GameState for State {
         ctx.set_active_console(1); // player layer
         ctx.cls();
         self.resources.insert(ctx.key);
-        self.systems.execute(&mut self.ecs, &mut self.resources);
+
+        let current_state = self.resources.get::<TurnState>().unwrap().clone(); //I dont like this. Danger!
+        match current_state {
+            TurnState::AwaitingInput => self.input_system.execute(&mut self.ecs, &mut self.resources),
+            TurnState::PlayerTurn => self.player_system.execute(&mut self.ecs, &mut self.resources),
+            TurnState::WorldTurn => self.world_system.execute(&mut self.ecs, &mut self.resources),
+        }
+
         render_draw_buffer(ctx).expect("Render error");
     }
 }
