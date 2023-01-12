@@ -24,7 +24,8 @@ pub fn spawn_monster(
     ecs.push(
         (
             Enemy {},
-            Collider{},
+            Collider {},
+            Wanderer {},
             position,
             Render {
                 color: ColorPair::new(WHITE, BLACK),
@@ -47,7 +48,7 @@ pub fn spawn_resource(
     ecs.push(
         (
             CollectableResource {},
-            Collider{},
+            Collider {},
             position,
             Render {
                 color: ColorPair::new(WHITE, BLACK),
