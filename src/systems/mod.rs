@@ -3,6 +3,7 @@ mod map_render;
 mod entity_render;
 mod collisions;
 mod random_move;
+mod turns;
 
 use crate::prelude::*;
 
