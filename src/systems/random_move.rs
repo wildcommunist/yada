@@ -5,14 +5,14 @@ use crate::prelude::*;
 #[read_component(Wanderer)]
 pub fn random_move(
     ecs: &mut SubWorld,
-    #[resource] map: &Map,
+    commands: &mut CommandBuffer,
 ) {
-    let mut movers = <&mut Point>::query()
+    let mut movers = <(Entity, &Point)>::query()
         .filter(component::<Wanderer>());
 
     movers
         .iter_mut(ecs)
-        .for_each(|p| {
+        .for_each(|(e, p)| {
             let mut rng = RandomNumberGenerator::new();
             let destination = match rng.range(0, 5) {
                 0 => Point::new(-1, 0),
@@ -22,8 +22,7 @@ pub fn random_move(
                 _ => Point::new(0, 0)
             } + *p;
 
-            if map.can_enter_tile(destination) {
-                *p = destination;
-            }
+            commands
+                .push(((), WantsToMove { entity: *e, point: destination }));
         });
 }
