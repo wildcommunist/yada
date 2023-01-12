@@ -41,10 +41,10 @@ impl Map {
                 let idx = Self::map_index(x, y);
                 match self.tiles[idx] {
                     TileType::Floor => {
-                        ctx.set(x, y, YELLOW, BLACK, to_cp437('.'));
+                        ctx.set(x, y, GRAY2, BLACK, to_cp437('.'));
                     }
                     TileType::Wall => {
-                        ctx.set(x, y, GREEN, BLACK, to_cp437('#'));
+                        ctx.set(x, y, GRAY5, BLACK, to_cp437('#'));
                     }
                 }
             }
@@ -53,7 +53,7 @@ impl Map {
 
     // This function checks if given point is within the map boundary
     pub fn is_in_map_bounds(&self, point: Point) -> bool {
-        point.x >= 0 && point.x < SCREEN_WIDTH && point.y >= 0 && point.y <= SCREEN_HEIGHT
+        point.x >= 0 && point.x < SCREEN_WIDTH && point.y >= 0 && point.y < SCREEN_HEIGHT
     }
 
     // Check if we can enter the tile. For now it just checks if the tile is floor
