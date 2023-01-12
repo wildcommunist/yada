@@ -27,6 +27,14 @@ impl Map {
         ((y * SCREEN_WIDTH) + x) as usize
     }
 
+    pub fn try_index(&self, point: Point) -> Option<usize> {
+        if !self.is_in_map_bounds(point) {
+            None
+        } else {
+            Some(Self::map_index(point.x, point.y))
+        }
+    }
+
     pub fn render(&self, ctx: &mut BTerm) {
         for y in 0..SCREEN_HEIGHT {
             for x in 0..SCREEN_WIDTH {
@@ -41,5 +49,16 @@ impl Map {
                 }
             }
         }
+    }
+
+    // This function checks if given point is within the map boundary
+    pub fn is_in_map_bounds(&self, point: Point) -> bool {
+        point.x >= 0 && point.x < SCREEN_WIDTH && point.y >= 0 && point.y <= SCREEN_HEIGHT
+    }
+
+    // Check if we can enter the tile. For now it just checks if the tile is floor
+    pub fn can_enter_tile(&self, point: Point) -> bool {
+        self.is_in_map_bounds(point) &&
+            self.tiles[Self::map_index(point.x, point.y)] == TileType::Floor
     }
 }
