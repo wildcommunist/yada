@@ -48,6 +48,12 @@ impl State {
             .map(|r| r.center())
             .for_each(|rp| spawn_monster(&mut ecs, &mut rng, rp));
 
+        map_builder.rooms
+            .iter()
+            .skip(1)
+            .map(|r| r.center())
+            .for_each(|rp| spawn_resource(&mut ecs, &mut rng, Point::new(rp.x + 1, rp.y + 1)));
+
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
 
@@ -76,7 +82,7 @@ fn main() -> BError {
         .with_title("Yet Another Dungeon Adventure")
         .with_fps_cap(30.)
         .with_dimensions(DISPLAY_WIDTH, DISPLAY_HEIGHT)
-        .with_dimensions(64, 64)
+        .with_tile_dimensions(32, 32)
         .with_resource_path("resources/")
         .with_font("dungeonfont.png", 32, 32)
         .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png")

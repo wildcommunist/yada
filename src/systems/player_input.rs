@@ -2,7 +2,7 @@ use crate::prelude::*;
 
 #[system]
 #[write_component(Point)]
-#[read_component(PLayer)]
+#[read_component(Player)]
 pub fn player_input(
     ecs: &mut SubWorld,
     #[resource] map: &Map,
@@ -20,7 +20,7 @@ pub fn player_input(
 
         if delta.x != 0 || delta.y != 0 {
             let mut players = <&mut Point>::query()
-                .filter(component::<PLayer>());
+                .filter(component::<Player>());
 
             players.iter_mut(ecs).for_each(|pos| {
                 let destination = *pos + delta;
