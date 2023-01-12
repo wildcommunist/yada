@@ -1,4 +1,3 @@
-use std::cmp::max;
 use crate::prelude::*;
 
 const NUM_ROOMS: usize = 40;
