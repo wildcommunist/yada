@@ -11,7 +11,9 @@ pub fn spawn_player(
             Render {
                 color: ColorPair::new(WHITE, BLACK),
                 glyph: to_cp437('@'),
-            }
+            },
+            Health { current: 1, max: 150 },
+            XP { current: 99, max: 100 },
         )
     );
 }
@@ -21,6 +23,11 @@ pub fn spawn_monster(
     rng: &mut RandomNumberGenerator,
     position: Point,
 ) {
+    let (hp, name, glyph) = match rng.roll_dice(1, 10) {
+        0 => goblin(),
+        _ => orc()
+    };
+
     ecs.push(
         (
             Enemy {},
@@ -29,15 +36,20 @@ pub fn spawn_monster(
             position,
             Render {
                 color: ColorPair::new(WHITE, BLACK),
-                glyph: match rng.range(0, 4) {
-                    0 => to_cp437('E'),
-                    1 => to_cp437('O'),
-                    2 => to_cp437('o'),
-                    _ => to_cp437('g')
-                },
-            }
+                glyph,
+            },
+            Health { current: hp, max: hp },
+            NameLabel(name)
         )
     );
+}
+
+fn goblin() -> (i32, String, FontCharType) {
+    (10, "Goblin".to_string(), to_cp437('g'))
+}
+
+fn orc() -> (i32, String, FontCharType) {
+    (15, "Orc".to_string(), to_cp437('o'))
 }
 
 pub fn spawn_resource(

@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-const NUM_TILES: usize = (SCREEN_WIDTH * SCREEN_HEIGHT) as usize;
+const NUM_TILES: usize = (MAP_WIDTH * MAP_HEIGHT) as usize;
 
 #[derive(Copy, Clone, PartialEq)]
 pub enum TileType {
@@ -24,7 +24,7 @@ impl Map {
     }
 
     pub fn map_index(x: i32, y: i32) -> usize {
-        ((y * SCREEN_WIDTH) + x) as usize
+        ((y * MAP_WIDTH) + x) as usize
     }
 
     pub fn try_index(&self, point: Point) -> Option<usize> {
@@ -37,7 +37,7 @@ impl Map {
 
     // This function checks if given point is within the map boundary
     pub fn is_in_map_bounds(&self, point: Point) -> bool {
-        point.x >= 0 && point.x < SCREEN_WIDTH && point.y >= 0 && point.y < SCREEN_HEIGHT
+        point.x >= 0 && point.x < MAP_WIDTH && point.y >= 0 && point.y < MAP_HEIGHT
     }
 
     // Check if we can enter the tile. For now it just checks if the tile is floor

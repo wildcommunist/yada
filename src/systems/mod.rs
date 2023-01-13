@@ -5,6 +5,8 @@ mod collisions;
 mod random_move;
 mod turns;
 mod movement;
+mod hud;
+mod tooltips;
 
 use crate::prelude::*;
 
@@ -15,6 +17,8 @@ pub fn build_input_scheduler() -> Schedule {
         .flush()
         .add_system(map_render::map_render_system())
         .add_system(entity_render::entity_render_system())
+        .add_system(hud::hud_system())
+        .add_system(tooltips::tooltip_system())
         .build()
 }
 
@@ -27,6 +31,8 @@ pub fn build_player_scheduler() -> Schedule {
         .flush()
         .add_system(map_render::map_render_system())
         .add_system(entity_render::entity_render_system())
+        .add_system(hud::hud_system())
+        .add_system(tooltips::tooltip_system())
         .add_system(turns::turn_system())
         .build()
 }
@@ -42,6 +48,8 @@ pub fn build_world_scheduler() -> Schedule {
         .flush()
         .add_system(map_render::map_render_system())
         .add_system(entity_render::entity_render_system())
+        .add_system(hud::hud_system())
+        .add_system(tooltips::tooltip_system())
         .add_system(turns::turn_system())
         .build()
 }

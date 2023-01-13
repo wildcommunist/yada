@@ -30,10 +30,10 @@ impl MapBuilder {
     fn build_random_room(&mut self, rng: &mut RandomNumberGenerator) {
         while self.rooms.len() < NUM_ROOMS {
             let room = Rect::with_size(
-                rng.range(1, SCREEN_WIDTH - 10),
-                rng.range(1, SCREEN_HEIGHT - 10),
-                rng.range(3, 20),
-                rng.range(3, 20),
+                rng.range(1, MAP_WIDTH - 10),
+                rng.range(1, MAP_HEIGHT - 10),
+                rng.range(3, 50),
+                rng.range(3, 50),
             );
 
             let mut overlap = false;
@@ -46,7 +46,7 @@ impl MapBuilder {
             if !overlap {
                 // we have no overlap, add room to the map
                 room.for_each(|p| {
-                    if p.x > 0 && p.x < SCREEN_WIDTH && p.y > 0 && p.y < SCREEN_HEIGHT {
+                    if p.x > 0 && p.x < MAP_WIDTH && p.y > 0 && p.y < MAP_HEIGHT {
                         // the room is inside bounds of the screen
                         let idx = Map::map_index(p.x, p.y);
                         self.map.tiles[idx] = TileType::Floor;
