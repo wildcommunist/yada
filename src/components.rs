@@ -1,3 +1,4 @@
+use std::fmt::{Display, Formatter};
 use crate::prelude::*;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -53,6 +54,12 @@ pub enum ResourceType {
     Crokite,
     Silver,
     Gold,
+}
+
+impl Display for ResourceType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]

@@ -41,11 +41,13 @@ pub fn player_input(
                     if let Ok(res) = ecs.entry_ref(*entity)
                         .unwrap().get_component::<Resource>() {
                         println!("We got a resource: {:?}", res.resource);
+                        println!("We got a player: {:?}", player_entity);
                         commands
                             .push(((), WantsToGather {
                                 source: player_entity,
                                 target: *entity,
                             }));
+                        println!("Pushed resource {:?}", res.resource);
                     };
 
                     if ecs.entry_ref(*entity)

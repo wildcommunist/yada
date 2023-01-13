@@ -7,9 +7,11 @@ mod movement;
 mod hud;
 mod tooltips;
 mod combat;
+mod gather;
 
 use crate::prelude::*;
 
+// This is where player sits and decides what to do. Waiting for player input
 pub fn build_input_scheduler() -> Schedule {
     Schedule::builder()
         // Add systems here
@@ -22,9 +24,12 @@ pub fn build_input_scheduler() -> Schedule {
         .build()
 }
 
+// This is executed right after player finilized the input
 pub fn build_player_scheduler() -> Schedule {
     Schedule::builder()
         // Add systems here
+        .add_system(gather::gather_system())
+        .flush()
         .add_system(combat::combat_system())
         .flush()
         .add_system(movement::movement_system())
@@ -37,6 +42,7 @@ pub fn build_player_scheduler() -> Schedule {
         .build()
 }
 
+// This is worl'd turn. Do stuff here like grow, heal respawn e.t.c.
 pub fn build_world_scheduler() -> Schedule {
     Schedule::builder()
         // Add systems here

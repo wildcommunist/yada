@@ -10,7 +10,7 @@ pub fn combat(
     // get a list of all the disputes that are planned
     let mut disputes = <(Entity, &WantsToAttack)>::query();
     // lets make a list of victims
-    let victims: Vec<(Entity, Entity)> = disputes // remeber, teh first entity is the Message, NOT the attacker
+    let victims: Vec<(Entity, Entity)> = disputes // REMEMBER, the first entity is the Message, NOT the attacker
         .iter(ecs)
         .map(|(entity, attack)| (*entity, attack.target))
         .collect();
