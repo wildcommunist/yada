@@ -4,6 +4,7 @@ use crate::prelude::*;
 #[read_component(Point)]
 #[read_component(Player)]
 #[read_component(Resource)]
+#[write_component(Health)]
 #[read_component(Collider)]
 #[read_component(Enemy)]
 pub fn player_input(
@@ -21,14 +22,17 @@ pub fn player_input(
             _ => Point::zero()
         };
 
-        if delta.x != 0 || delta.y != 0 {
-            let mut players = <(Entity, &Point)>::query()
-                .filter(component::<Player>());
-            let (player_entity, player_destination) = players
-                .iter(ecs)
-                .find_map(|(entity, pos)| Some((*entity, *pos + delta)))
-                .unwrap();
+        let mut is_idle = true;
 
+        let mut players = <(Entity, &Point)>::query()
+            .filter(component::<Player>());
+        let (player_entity, player_destination) = players
+            .iter(ecs)
+            .map(|(entity, pos)| Some((*entity, *pos + delta))).next()
+            .unwrap().unwrap();
+
+        if delta.x != 0 || delta.y != 0 {
+            is_idle = false;
             let mut colliders = <(Entity, &Point)>::query()
                 .filter(component::<Collider>());
             let mut hit_something = false;
@@ -60,7 +64,6 @@ pub fn player_input(
                             }));
                     };
 
-
                     hit_something = true;
                 });
 
@@ -71,6 +74,14 @@ pub fn player_input(
                         entity: player_entity,
                         point: player_destination,
                     }));
+            }
+        }
+        if is_idle {
+            if let Ok(health_component) = ecs
+                .entry_mut(player_entity)
+                .unwrap()
+                .get_component_mut::<Health>() {
+                health_component.current = i32::min(health_component.max, health_component.current + 1);
             }
         }
         *state = TurnState::PlayerTurn;

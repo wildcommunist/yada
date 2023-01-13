@@ -12,7 +12,9 @@ pub fn gather(
     // lets make a list of victims
     let gathering_messages: Vec<(Entity, Entity)> = gathering_query // Remember, the first entity is the MESSAGE, NOT the gatherer
         .iter(ecs)
-        .map(|(msg_entity, gather_request)| (*msg_entity, gather_request.target))
+        .map(|(msg_entity, gather_request)| {
+            (*msg_entity, gather_request.target)
+        })
         .collect();
 
     gathering_messages.iter().for_each(|(message, gather_target)| {
@@ -20,7 +22,11 @@ pub fn gather(
             .entry_mut(*gather_target)
             .unwrap()
             .get_component_mut::<Resource>() {
-            println!("Resource {} before gather: {}", resource_component.resource.to_string(), resource_component.amount);
+            println!(
+                "Resource {} before gather: {}",
+                resource_component.resource,
+                resource_component.amount
+            );
 
             //resource_component.amount -= 1;
             //if resource_component.amount < 1 {
