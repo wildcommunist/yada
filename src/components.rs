@@ -94,3 +94,6 @@ pub struct WantsToGather {
     pub source: Entity,
     pub target: Entity,
 }
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct ChasingPlayer;

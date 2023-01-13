@@ -8,6 +8,7 @@ mod hud;
 mod tooltips;
 mod combat;
 mod gather;
+mod chasing;
 
 use crate::prelude::*;
 
@@ -42,11 +43,12 @@ pub fn build_player_scheduler() -> Schedule {
         .build()
 }
 
-// This is worl'd turn. Do stuff here like grow, heal respawn e.t.c.
+// This is world's turn. Do stuff here like grow, heal respawn e.t.c.
 pub fn build_world_scheduler() -> Schedule {
     Schedule::builder()
         // Add systems here
         .add_system(random_move::random_move_system())
+        .add_system(chasing::chase_system())
         .flush()
         .add_system(combat::combat_system())
         .flush()

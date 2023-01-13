@@ -39,7 +39,8 @@ pub fn spawn_monster(
                 glyph,
             },
             Health { current: hp, max: hp },
-            NameLabel(name)
+            NameLabel(name),
+            ChasingPlayer {}
         )
     );
 }
