@@ -12,7 +12,7 @@ pub fn spawn_player(
                 color: ColorPair::new(WHITE, BLACK),
                 glyph: to_cp437('@'),
             },
-            Health { current: 1, max: 150 },
+            Health { current: 75, max: 150 },
             XP { current: 99, max: 100 },
         )
     );
@@ -57,6 +57,8 @@ pub fn spawn_resource(
     rng: &mut RandomNumberGenerator,
     position: Point,
 ) {
+    let (amount, name, glyph, res_type) = spawn_resource_node(rng);
+
     ecs.push(
         (
             CollectableResource {},
@@ -64,13 +66,32 @@ pub fn spawn_resource(
             position,
             Render {
                 color: ColorPair::new(WHITE, BLACK),
-                glyph: match rng.range(0, 4) {
-                    0 => to_cp437('K'),
-                    1 => to_cp437('L'),
-                    2 => to_cp437('M'),
-                    _ => to_cp437('N')
-                },
-            }
+                glyph,
+            },
+            Resource { resource: res_type, amount },
+            NameLabel(name)
         )
     );
+}
+
+fn spawn_resource_node(rng: &mut RandomNumberGenerator) -> (u8, String, FontCharType, ResourceType) {
+    let (name, glyph, resource_type) = match rng.range(0, 10) {
+        0..=4 => {
+            ("Coal".to_string(), to_cp437('K'), ResourceType::Coal)
+        }
+        5..=6 => {
+            ("Mithril".to_string(), to_cp437('L'), ResourceType::Coal)
+        }
+        7..=8 => {
+            ("Adamantium".to_string(), to_cp437('M'), ResourceType::Coal)
+        }
+        9 => {
+            ("Rune".to_string(), to_cp437('N'), ResourceType::Coal)
+        }
+        _ => {
+            ("Coal".to_string(), to_cp437('K'), ResourceType::Coal)
+        }
+    };
+
+    (rng.range(0, 4), name, glyph, resource_type)
 }

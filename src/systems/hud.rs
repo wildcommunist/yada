@@ -9,7 +9,7 @@ pub fn hud(
 ) {
     let mut health_query = <&Health>::query()
         .filter(component::<Player>());
-    let player_health = health_query
+    let player_health = health_query //TODO: This will crash when player dies (because we are removing the entity)
         .iter(ecs)
         .next()
         .unwrap();

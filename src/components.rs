@@ -45,6 +45,45 @@ pub struct XP {
     pub max: i32,
 }
 
-#[derive( Clone, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub enum ResourceType {
+    Coal,
+    Mithril,
+    Adamatite,
+    Crokite,
+    Silver,
+    Gold,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Resource {
+    pub resource: ResourceType,
+    pub amount: u8,
+}
+
+#[derive(Clone, PartialEq)]
 pub struct NameLabel(pub String);
 
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct WantsToPerformAction {
+    pub issuer: Entity,
+    pub action: Action,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub enum Action {
+    Attack,
+    Gather,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct WantsToAttack {
+    pub attacker: Entity,
+    pub target: Entity,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct WantsToGather {
+    pub source: Entity,
+    pub target: Entity,
+}
