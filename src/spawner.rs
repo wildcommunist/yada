@@ -12,7 +12,7 @@ pub fn spawn_player(
                 color: ColorPair::new(WHITE, BLACK),
                 glyph: to_cp437('@'),
             },
-            Health { current: 10, max: 150 },
+            Health { current: 150, max: 150 },
             XP { current: 99, max: 100 },
         )
     );
@@ -95,4 +95,20 @@ fn spawn_resource_node(rng: &mut RandomNumberGenerator) -> (u8, String, FontChar
     };
 
     (rng.range(0, 4), name, glyph, resource_type)
+}
+
+fn spawn_item(
+    ecs: &mut World,
+    position: Point,
+) {
+    ecs.push(
+        (
+            Item, AmuletOfYala, position,
+            Render {
+                color: ColorPair::new(WHITE, BLACK),
+                glyph: to_cp437('|'),
+            },
+            NameLabel("Amulet of Yala".to_string())
+        )
+    );
 }

@@ -2,6 +2,7 @@ use crate::prelude::*;
 
 #[system]
 #[read_component(WantsToAttack)]
+#[read_component(Player)]
 #[write_component(Health)]
 pub fn combat(
     ecs: &mut SubWorld, // mut coz we have potential to remove entities
@@ -16,6 +17,9 @@ pub fn combat(
         .collect();
 
     victims.iter().for_each(|(message, victim)| {
+        let is_player = ecs
+            .entry_ref(*victim)
+            .unwrap().get_component::<Player>().is_ok();
         if let Ok(health_component) = ecs
             .entry_mut(*victim)
             .unwrap()
@@ -23,7 +27,7 @@ pub fn combat(
             println!("Health before attack: {}", health_component.current);
 
             health_component.current -= 1;
-            if health_component.current < 1 {
+            if health_component.current < 1 && !is_player{
                 //TODO: death system
                 commands.remove(*victim);
             }

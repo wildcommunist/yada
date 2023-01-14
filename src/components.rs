@@ -97,3 +97,10 @@ pub struct WantsToGather {
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct ChasingPlayer;
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Item;
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct AmuletOfYala;
+

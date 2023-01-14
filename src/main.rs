@@ -72,6 +72,38 @@ impl State {
             world_system: build_world_scheduler(),
         }
     }
+
+    fn game_over(&mut self, ctx: &mut BTerm) {
+        ctx.set_active_console(2);
+        ctx.print_color_centered(2, RED, BLACK, "Your adventure has come to an end!");
+        ctx.print_color_centered(4, WHITE, BLACK, "When your HP hits 0, you are going to have a bad time.");
+        ctx.print_color_centered(6, YELLOW, BLACK, "Press [R] to restart, [Q] to exit.");
+
+        if let Some(VirtualKeyCode::R) = ctx.key {
+            self.ecs = World::default();
+            self.resources = Resources::default();
+            let mut rng = RandomNumberGenerator::new();
+            let map_builder = MapBuilder::new(&mut rng);
+
+            spawn_player(&mut self.ecs, map_builder.player_start);
+
+            map_builder.rooms
+                .iter()
+                .skip(1)
+                .map(|r| r.center())
+                .for_each(|rp| spawn_monster(&mut self.ecs, &mut rng, rp));
+
+            map_builder.rooms
+                .iter()
+                .skip(1)
+                .map(|r| r.center())
+                .for_each(|rp| spawn_resource(&mut self.ecs, &mut rng, Point::new(rp.x + 1, rp.y + 1)));
+
+            self.resources.insert(map_builder.map);
+            self.resources.insert(Camera::new(map_builder.player_start));
+            self.resources.insert(TurnState::AwaitingInput);
+        }
+    }
 }
 
 impl GameState for State {
@@ -91,6 +123,7 @@ impl GameState for State {
             TurnState::AwaitingInput => self.input_system.execute(&mut self.ecs, &mut self.resources),
             TurnState::PlayerTurn => self.player_system.execute(&mut self.ecs, &mut self.resources),
             TurnState::WorldTurn => self.world_system.execute(&mut self.ecs, &mut self.resources),
+            TurnState::GameOver => self.game_over(ctx),
         }
 
         render_draw_buffer(ctx).expect("Render error");
