@@ -4,7 +4,7 @@ pub fn spawn_player(
     ecs: &mut World,
     position: Point,
 ) {
-    ecs.push(
+    let player = ecs.push(
         (
             Player {},
             position,
@@ -16,6 +16,10 @@ pub fn spawn_player(
             XP { current: 99, max: 100 },
         )
     );
+
+    if let Some(mut e) = ecs.entry(player) {
+        e.add_component(FieldOfView::new(16));
+    }
 }
 
 pub fn spawn_monster(
@@ -28,7 +32,7 @@ pub fn spawn_monster(
         _ => orc()
     };
 
-    ecs.push(
+    let entity_id = ecs.push(
         (
             Enemy {},
             Collider {},
@@ -40,9 +44,14 @@ pub fn spawn_monster(
             },
             Health { current: hp, max: hp },
             NameLabel(name),
-            ChasingPlayer {}
         )
     );
+
+
+    if let Some(mut e) = ecs.entry(entity_id) {
+        e.add_component(ChasingPlayer);
+        e.add_component(FieldOfView::new(6));
+    }
 }
 
 fn goblin() -> (i32, String, FontCharType) {
