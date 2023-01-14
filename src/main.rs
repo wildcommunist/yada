@@ -29,6 +29,7 @@ mod prelude {
     pub use crate::turn_state::*;
 }
 
+use std::process::exit;
 use prelude::*;
 
 struct State {
@@ -81,30 +82,53 @@ impl State {
         ctx.print_color_centered(6, YELLOW, BLACK, "Press [R] to restart, [Q] to exit.");
 
         if let Some(VirtualKeyCode::R) = ctx.key {
-            self.ecs = World::default();
-            self.resources = Resources::default();
-            let mut rng = RandomNumberGenerator::new();
-            let map_builder = MapBuilder::new(&mut rng);
-
-            spawn_player(&mut self.ecs, map_builder.player_start);
-            spawn_item(&mut self.ecs, map_builder.amulet_start);
-
-            map_builder.rooms
-                .iter()
-                .skip(rng.range(0, 3))
-                .map(|r| r.center())
-                .for_each(|rp| spawn_monster(&mut self.ecs, &mut rng, rp));
-
-            map_builder.rooms
-                .iter()
-                .skip(rng.range(0, 6))
-                .map(|r| r.center())
-                .for_each(|rp| spawn_resource(&mut self.ecs, &mut rng, Point::new(rp.x + 1, rp.y + 1)));
-
-            self.resources.insert(map_builder.map);
-            self.resources.insert(Camera::new(map_builder.player_start));
-            self.resources.insert(TurnState::AwaitingInput);
+            self.reset_game_state();
         }
+
+        if let Some(VirtualKeyCode::Q) = ctx.key {
+            exit(0);
+        }
+    }
+
+    fn victory(&mut self, ctx: &mut BTerm) {
+        ctx.set_active_console(2);
+        ctx.print_color_centered(2, GREEN, BLACK, "You have done it, you have found the amulet of YALA");
+        ctx.print_color_centered(4, WHITE, BLACK, "You return to your village, as a hero, wearing the amulet around your neck!");
+        ctx.print_color_centered(6, YELLOW, BLACK, "Press [R] to restart, [Q] to exit.");
+
+        if let Some(VirtualKeyCode::R) = ctx.key {
+            self.reset_game_state();
+        }
+
+        if let Some(VirtualKeyCode::Q) = ctx.key {
+            exit(0);
+        }
+    }
+
+    fn reset_game_state(&mut self) {
+        self.ecs = World::default();
+        self.resources = Resources::default();
+        let mut rng = RandomNumberGenerator::new();
+        let map_builder = MapBuilder::new(&mut rng);
+
+        spawn_player(&mut self.ecs, map_builder.player_start);
+        spawn_item(&mut self.ecs, map_builder.amulet_start);
+
+        map_builder.rooms
+            .iter()
+            .skip(rng.range(0, 3))
+            .map(|r| r.center())
+            .for_each(|rp| spawn_monster(&mut self.ecs, &mut rng, rp));
+
+        map_builder.rooms
+            .iter()
+            .skip(rng.range(0, 6))
+            .map(|r| r.center())
+            .for_each(|rp| spawn_resource(&mut self.ecs, &mut rng, Point::new(rp.x + 1, rp.y + 1)));
+
+        self.resources.insert(map_builder.map);
+        self.resources.insert(Camera::new(map_builder.player_start));
+        self.resources.insert(TurnState::AwaitingInput);
     }
 }
 
@@ -126,6 +150,7 @@ impl GameState for State {
             TurnState::PlayerTurn => self.player_system.execute(&mut self.ecs, &mut self.resources),
             TurnState::WorldTurn => self.world_system.execute(&mut self.ecs, &mut self.resources),
             TurnState::GameOver => self.game_over(ctx),
+            TurnState::Victory => self.victory(ctx),
         }
 
         render_draw_buffer(ctx).expect("Render error");
@@ -137,7 +162,7 @@ fn main() -> BError {
         .with_title("Yet Another Dungeon Adventure")
         .with_fps_cap(30.0)
         .with_dimensions(DISPLAY_WIDTH, DISPLAY_HEIGHT)
-        .with_tile_dimensions(32, 32)
+        .with_tile_dimensions(48, 48)
         .with_resource_path("resources/")
         .with_font("dungeonfont.png", 32, 32)
         .with_font("terminal8x8.png", 8, 8)
