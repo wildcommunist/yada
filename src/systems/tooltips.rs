@@ -19,7 +19,7 @@ pub fn tooltip(
         .iter(ecs)
         .filter(|(_, p, _)| { **p == map_pos })
         .for_each(|(e, _, name)| {
-            let screen_pos = *mouse_pos * 4;
+            let screen_pos = Point::new((*mouse_pos * 4).x, (*mouse_pos * 4).y - 1);
             let display = if let Ok(health) = ecs.entry_ref(*e)
                 .unwrap().get_component::<Health>() {
                 format!("{} ({}/{})", name.0, health.current, health.max)

@@ -47,6 +47,7 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng);
 
         spawn_player(&mut ecs, map_builder.player_start);
+        spawn_item(&mut ecs, map_builder.amulet_start);
 
         map_builder.rooms
             .iter()
@@ -86,16 +87,17 @@ impl State {
             let map_builder = MapBuilder::new(&mut rng);
 
             spawn_player(&mut self.ecs, map_builder.player_start);
+            spawn_item(&mut self.ecs, map_builder.amulet_start);
 
             map_builder.rooms
                 .iter()
-                .skip(1)
+                .skip(rng.range(0, 3))
                 .map(|r| r.center())
                 .for_each(|rp| spawn_monster(&mut self.ecs, &mut rng, rp));
 
             map_builder.rooms
                 .iter()
-                .skip(1)
+                .skip(rng.range(0, 6))
                 .map(|r| r.center())
                 .for_each(|rp| spawn_resource(&mut self.ecs, &mut rng, Point::new(rp.x + 1, rp.y + 1)));
 

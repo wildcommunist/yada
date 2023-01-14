@@ -1,9 +1,11 @@
+use legion::world::ComponentError;
 use crate::prelude::*;
 
 #[system]
 #[read_component(WantsToAttack)]
 #[read_component(Player)]
 #[write_component(Health)]
+#[read_component(NameLabel)]
 pub fn combat(
     ecs: &mut SubWorld, // mut coz we have potential to remove entities
     commands: &mut CommandBuffer,
@@ -20,15 +22,26 @@ pub fn combat(
         let is_player = ecs
             .entry_ref(*victim)
             .unwrap().get_component::<Player>().is_ok();
+        let name = match ecs
+            .entry_ref(*victim)
+            .unwrap().get_component::<NameLabel>() {
+            Ok(n) => n.0.clone(),
+            Err(_) => "Unknown entity".to_string()
+        };
+
         if let Ok(health_component) = ecs
             .entry_mut(*victim)
             .unwrap()
             .get_component_mut::<Health>() {
             println!("Health before attack: {}", health_component.current);
 
-            health_component.current -= 1;
-            if health_component.current < 1 && !is_player{
+            if !is_player {
+                health_component.current -= 1;
+            }
+
+            if health_component.current < 1 && !is_player {
                 //TODO: death system
+                println!("{} dies!", name);
                 commands.remove(*victim);
             }
         }

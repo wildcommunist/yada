@@ -97,7 +97,7 @@ fn spawn_resource_node(rng: &mut RandomNumberGenerator) -> (u8, String, FontChar
     (rng.range(0, 4), name, glyph, resource_type)
 }
 
-fn spawn_item(
+pub fn spawn_item(
     ecs: &mut World,
     position: Point,
 ) {
