@@ -18,7 +18,7 @@ pub fn spawn_player(
     );
 
     if let Some(mut e) = ecs.entry(player) {
-        e.add_component(FieldOfView::new(16));
+        e.add_component(FieldOfView::new(8));
     }
 }
 
