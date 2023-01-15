@@ -15,15 +15,12 @@ impl MapArchitect for RoomArchitect {
         mb.amulet_start = mb.find_most_distant();
 
         for room in mb.rooms.iter().skip(1) {
-            if rng.range(0, 10) > 2 {
+            if rng.range(0, 10) < 6 {
                 mb.monster_spawns.push(Point::new(
                     rng.range(room.x1 + 1, room.x2 - 1),
                     rng.range(room.y1 + 1, room.y2 - 1),
                 ))
-            }
-
-
-            if rng.range(0, 10) > 7 {
+            } else {
                 mb.resource_spawns.push(Point::new(
                     rng.range(room.x1 + 1, room.x2 - 1),
                     rng.range(room.y1 + 1, room.y2 - 1),

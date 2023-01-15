@@ -143,6 +143,7 @@ pub struct ProvidesManaRestore {
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct ProvidesDungeonMap;
 
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum ItemRarity {
     Poor,
     Common,
@@ -150,5 +151,8 @@ pub enum ItemRarity {
     Rare,
     Epic,
     Legendary,
-    Artifact
+    Artifact,
 }
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Carried(pub Entity);

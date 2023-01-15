@@ -7,29 +7,42 @@ use crate::prelude::*;
 #[write_component(Health)]
 #[read_component(Collider)]
 #[read_component(Enemy)]
+#[read_component(Item)]
+#[read_component(Carried)]
 pub fn player_input(
     ecs: &mut SubWorld,
     commands: &mut CommandBuffer,
     #[resource] key: &Option<VirtualKeyCode>,
     #[resource] state: &mut TurnState,
 ) {
+    let mut players = <(Entity, &Point)>::query()
+        .filter(component::<Player>());
+    let (player_entity, player_position) = players
+        .iter(ecs)
+        .map(|(entity, pos)| Some((*entity, *pos))).next()
+        .unwrap().unwrap();
+
     if let Some(key) = key {
         let delta = match key {
             VirtualKeyCode::A => Point::new(-1, 0),
             VirtualKeyCode::D => Point::new(1, 0),
             VirtualKeyCode::W => Point::new(0, -1),
             VirtualKeyCode::S => Point::new(0, 1),
+            VirtualKeyCode::G => {
+                let mut items_query = <(Entity, &Item, &Point)>::query();
+                items_query.iter(ecs)
+                    .filter(|(_, _, &item_pos)| item_pos == player_position)
+                    .for_each(|(entity, _item, _item_pos)| {
+                        commands.remove_component::<Point>(*entity);
+                        commands.add_component(*entity, Carried(player_entity));
+                    });
+                Point::zero()
+            }
             _ => Point::zero()
         };
+        let player_destination = player_position + delta;
 
         let mut is_idle = true;
-
-        let mut players = <(Entity, &Point)>::query()
-            .filter(component::<Player>());
-        let (player_entity, player_destination) = players
-            .iter(ecs)
-            .map(|(entity, pos)| Some((*entity, *pos + delta))).next()
-            .unwrap().unwrap();
 
         if delta.x != 0 || delta.y != 0 {
             is_idle = false;
