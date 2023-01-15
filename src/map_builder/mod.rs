@@ -2,9 +2,12 @@ mod empty;
 mod rooms;
 mod automata;
 mod drunkard;
+mod prefab;
 
 use crate::map_builder::automata::CellularAutomataArchitect;
 use crate::map_builder::drunkard::DrunkardsWalkArchitect;
+use crate::map_builder::empty::EmptyArchitect;
+use crate::map_builder::prefab::apply_prefab;
 use crate::map_builder::rooms::RoomArchitect;
 use crate::prelude::*;
 
@@ -35,8 +38,17 @@ impl MapBuilder {
         }
     }
     pub fn new(rng: &mut RandomNumberGenerator) -> Self {
-        let mut architect = RoomArchitect {};
-        architect.new(rng)
+        let mut architect: Box<dyn MapArchitect> = match rng.range(0, 3) {
+            0 => Box::new(DrunkardsWalkArchitect {}),
+            1 => Box::new(RoomArchitect {}),
+            _ => Box::new(CellularAutomataArchitect {}),
+        };
+
+        let mut arch = EmptyArchitect{};
+        let mut mb = arch.new(rng);
+
+        apply_prefab(&mut mb, rng);
+        mb
     }
 
     fn fill(&mut self, tile: TileType) {

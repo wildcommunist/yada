@@ -36,10 +36,10 @@ pub fn combat(
             println!("Health before attack: {}", health_component.current);
 
             // To make player not take damage
-            //if !is_player {
-            //    health_component.current -= 1;
-            //}
-            health_component.current -= 1; //TODO: Determine hit amount based on gear
+            if !is_player {
+                health_component.current -= 1;
+            }
+            //health_component.current -= 1; //TODO: Determine hit amount based on gear
 
             if health_component.current < 1 && !is_player {
                 //TODO: death system
