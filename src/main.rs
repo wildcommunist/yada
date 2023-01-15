@@ -17,8 +17,8 @@ mod prelude {
     pub const SCREEN_HEIGHT: i32 = 50;
     pub const DISPLAY_WIDTH: i32 = SCREEN_WIDTH / 2;
     pub const DISPLAY_HEIGHT: i32 = SCREEN_HEIGHT / 2;
-    pub const MAP_WIDTH: i32 = 150;
-    pub const MAP_HEIGHT: i32 = 50;
+    pub const MAP_WIDTH: i32 = 120;
+    pub const MAP_HEIGHT: i32 = 120;
 
     pub use crate::map::*;
     pub use crate::map_builder::*;

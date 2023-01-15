@@ -25,7 +25,7 @@ pub fn map_render(
                 let tint = if player_fov.visible_tiles.contains(&pt) {
                     WHITE
                 } else {
-                    (144, 144, 144)
+                    (71, 71, 71)
                 };
 
                 let glyph = match map.tiles[idx] {
