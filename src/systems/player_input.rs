@@ -97,3 +97,30 @@ pub fn player_input(
         *state = TurnState::PlayerTurn;
     }
 }
+
+fn use_item(
+    slot: usize,
+    ecs: &mut SubWorld,
+    commands: &mut CommandBuffer,
+) -> Point {
+    let player = <(Entity, &Player)>::query()
+        .iter(ecs)
+        .map(|(a, _b)| *a)
+        .next()
+        .unwrap();
+
+    let item_entity = <(Entity, &Item, &Carried)>::query()
+        .iter(ecs)
+        .filter(|(_, _, carried)| carried.0 == player)
+        .enumerate()
+        .filter(|(count, (_, _, _))| *count == slot)// Get the item in slot
+        .map(|(_, (ent, _, _))| ent)
+        .next();
+
+    if let Some(item_entity) = item_entity {
+        commands
+            .push(((), ActivateItem { user: player, item: *item_entity }));
+    }
+
+    Point::zero()
+}

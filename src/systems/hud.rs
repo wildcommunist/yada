@@ -21,7 +21,8 @@ pub fn hud(
         .filter(component::<Player>());
     let player = <(Entity, &Player)>::query()
         .iter(ecs)
-        .find_map(|(e, _)| Some(*e))
+        .next()
+        .map(|(e, _)| *e)
         .unwrap();
     let player_xp = xp_query
         .iter(ecs)
@@ -31,18 +32,18 @@ pub fn hud(
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(2);
 
-    let mut y = 3;
+    let mut y = 5;
     <(&Item, &NameLabel, &ItemRarity, &Carried)>::query()
         .iter(ecs)
         .filter(|(_, _, _, carried)| carried.0 == player)
         .for_each(|(_, name, rarity, _)| {
             // "draw" the inventory
-            draw_batch.print_color(Point::new(3, y), &name.0, ColorPair::from(*rarity));
+            draw_batch.print_color(Point::new(3, y), format!("{}. {}", y - 4, &name.0), ColorPair::from(*rarity));
             y += 1;
         });
 
-    if y > 3 {
-        draw_batch.print_color(Point::new(2, 2), "Inventory:", ColorPair::new(YELLOW, BLACK));
+    if y > 5 {
+        draw_batch.print_color(Point::new(2, 3), "Inventory:", ColorPair::new(YELLOW, BLACK));
     }
 
     // Draw the health bar

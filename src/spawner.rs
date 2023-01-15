@@ -51,7 +51,8 @@ pub fn spawn_monster(
 
     if let Some(mut e) = ecs.entry(entity_id) {
         e.add_component(ChasingPlayer);
-        e.add_component(FieldOfView::new(6));
+        e.add_component(FieldOfView::new(5));
+        e.add_component(ItemRarity::Poor);
     }
 }
 

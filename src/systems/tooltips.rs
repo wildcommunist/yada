@@ -31,7 +31,7 @@ pub fn tooltip(
             let color = match ecs.entry_ref(*e)
                 .unwrap().get_component::<ItemRarity>(){
                 Ok(r) => *r,
-                Err(_) => ItemRarity::Uncommon
+                Err(_) => ItemRarity::Unknown
             };
 
             let display = if let Ok(health) = ecs.entry_ref(*e)

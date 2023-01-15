@@ -172,3 +172,9 @@ impl From<ItemRarity> for ColorPair {
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Carried(pub Entity);
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct ActivateItem {
+    pub user: Entity,
+    pub item: Entity,
+}
