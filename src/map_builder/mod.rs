@@ -1,29 +1,27 @@
+mod empty;
+
+use crate::map_builder::empty::EmptyArchitect;
 use crate::prelude::*;
+
+trait MapArchitect {
+    fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
+}
 
 const NUM_ROOMS: usize = 40;
 
 pub struct MapBuilder {
     pub map: Map,
     pub rooms: Vec<Rect>,
+    pub monster_spawns: Vec<Point>,
+    pub resource_spawns: Vec<Point>,
     pub player_start: Point,
     pub amulet_start: Point,
 }
 
 impl MapBuilder {
     pub fn new(rng: &mut RandomNumberGenerator) -> Self {
-        let mut mb = MapBuilder {
-            map: Map::new(),
-            rooms: Vec::new(),
-            player_start: Point::zero(),
-            amulet_start: Point::zero(),
-        };
-        mb.fill(TileType::Wall);
-        mb.build_random_room(rng);
-        mb.build_corridors(rng);
-        mb.player_start = mb.rooms[0].center();
-
-        mb.amulet_start = mb.find_most_distant();
-        mb
+        let mut architect = EmptyArchitect {};
+        architect.new(rng)
     }
 
     fn fill(&mut self, tile: TileType) {

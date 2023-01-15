@@ -50,17 +50,14 @@ impl State {
         spawn_player(&mut ecs, map_builder.player_start);
         spawn_item(&mut ecs, map_builder.amulet_start);
 
-        map_builder.rooms
+        map_builder.monster_spawns
             .iter()
-            .skip(1)
-            .map(|r| r.center())
-            .for_each(|rp| spawn_monster(&mut ecs, &mut rng, rp));
+            .for_each(|monster_pos| spawn_monster(&mut ecs, &mut rng, *monster_pos));
 
-        map_builder.rooms
+
+        map_builder.resource_spawns
             .iter()
-            .skip(1)
-            .map(|r| r.center())
-            .for_each(|rp| spawn_resource(&mut ecs, &mut rng, Point::new(rp.x + 1, rp.y + 1)));
+            .for_each(|monster_pos| spawn_resource(&mut ecs, &mut rng, *monster_pos));
 
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
@@ -114,17 +111,14 @@ impl State {
         spawn_player(&mut self.ecs, map_builder.player_start);
         spawn_item(&mut self.ecs, map_builder.amulet_start);
 
-        map_builder.rooms
+        map_builder.monster_spawns
             .iter()
-            .skip(rng.range(0, 3))
-            .map(|r| r.center())
-            .for_each(|rp| spawn_monster(&mut self.ecs, &mut rng, rp));
+            .for_each(|monster_pos| spawn_monster(&mut self.ecs, &mut rng, *monster_pos));
 
-        map_builder.rooms
+
+        map_builder.resource_spawns
             .iter()
-            .skip(rng.range(0, 6))
-            .map(|r| r.center())
-            .for_each(|rp| spawn_resource(&mut self.ecs, &mut rng, Point::new(rp.x + 1, rp.y + 1)));
+            .for_each(|resource_pos| spawn_resource(&mut self.ecs, &mut rng, *resource_pos));
 
         self.resources.insert(map_builder.map);
         self.resources.insert(Camera::new(map_builder.player_start));
