@@ -9,17 +9,20 @@ pub enum TileType {
 }
 
 pub struct Map {
-    pub tiles: Vec<TileType>, // Vectors are indexed on single dimension
+    pub tiles: Vec<TileType>,
+    // Vectors are indexed on single dimension
     /*
     We need a way to transform map coordinates [x][y] to vector location.
     This process is called striding.
      */
+    pub revealed_tiles: Vec<bool>,
 }
 
 impl Map {
     pub fn new() -> Self {
         Self {
-            tiles: vec![TileType::Floor; NUM_TILES]
+            tiles: vec![TileType::Floor; NUM_TILES],
+            revealed_tiles: vec![false; NUM_TILES],
         }
     }
 

@@ -35,9 +35,11 @@ pub fn combat(
             .get_component_mut::<Health>() {
             println!("Health before attack: {}", health_component.current);
 
-            if !is_player {
-                health_component.current -= 1;
-            }
+            // To make player not take damage
+            //if !is_player {
+            //    health_component.current -= 1;
+            //}
+            health_component.current -= 1; //TODO: Determine hit amount based on gear
 
             if health_component.current < 1 && !is_player {
                 //TODO: death system
