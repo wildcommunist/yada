@@ -24,6 +24,18 @@ pub fn player_input(
 
     if let Some(key) = key {
         let delta = match key {
+
+            // "action" buttons
+            VirtualKeyCode::Key1 => use_item(0, ecs, commands),
+            VirtualKeyCode::Key2 => use_item(1, ecs, commands),
+            VirtualKeyCode::Key3 => use_item(2, ecs, commands),
+            VirtualKeyCode::Key4 => use_item(3, ecs, commands),
+            VirtualKeyCode::Key5 => use_item(4, ecs, commands),
+            VirtualKeyCode::Key6 => use_item(5, ecs, commands),
+            VirtualKeyCode::Key7 => use_item(6, ecs, commands),
+            VirtualKeyCode::Key8 => use_item(7, ecs, commands),
+            VirtualKeyCode::Key9 => use_item(8, ecs, commands),
+
             VirtualKeyCode::A => Point::new(-1, 0),
             VirtualKeyCode::D => Point::new(1, 0),
             VirtualKeyCode::W => Point::new(0, -1),
@@ -87,12 +99,15 @@ pub fn player_input(
             }
         }
         if is_idle {
+
+            /*
             if let Ok(health_component) = ecs
                 .entry_mut(player_entity)
                 .unwrap()
                 .get_component_mut::<Health>() {
                 health_component.current = i32::min(health_component.max, health_component.current + 1);
             }
+            */
         }
         *state = TurnState::PlayerTurn;
     }

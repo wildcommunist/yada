@@ -13,8 +13,8 @@ pub fn spawn_player(
                 color: ColorPair::new(WHITE, BLACK),
                 glyph: to_cp437('@'),
             },
-            Health { current: 150, max: 150 },
-            XP { current: 99, max: 100 },
+            Health { current: 75, max: 150 },
+            XP { current: 0, max: 100 },
         )
     );
 

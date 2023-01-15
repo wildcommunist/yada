@@ -10,6 +10,7 @@ mod combat;
 mod gather;
 mod chasing;
 mod fov;
+mod use_items;
 
 use crate::prelude::*;
 
@@ -31,6 +32,7 @@ pub fn build_input_scheduler() -> Schedule {
 pub fn build_player_scheduler() -> Schedule {
     Schedule::builder()
         // Add systems here
+        .add_system(use_items::use_items_system())
         .add_system(gather::gather_system())
         .flush()
         .add_system(combat::combat_system())
@@ -54,6 +56,7 @@ pub fn build_world_scheduler() -> Schedule {
         .add_system(random_move::random_move_system())
         .add_system(chasing::chase_system())
         .flush()
+        .add_system(use_items::use_items_system())
         .add_system(combat::combat_system())
         .flush()
         .add_system(movement::movement_system())
