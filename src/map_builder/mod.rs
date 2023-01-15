@@ -22,27 +22,40 @@ impl MapBuilder {
         mb.build_corridors(rng);
         mb.player_start = mb.rooms[0].center();
 
-        let dijkstra_map = DijkstraMap::new(
-            MAP_WIDTH, MAP_HEIGHT,
-            &[mb.map.point2d_to_index(mb.player_start)],
-            &mb.map,
-            1024.0,
-        );
-        const UNREACHABLE: &f32 = &f32::MAX; // basically calculate the furthest point from the player and plonk the amulet there
-        mb.amulet_start = mb.map.index_to_point2d(
-            dijkstra_map.map
-                .iter()
-                .enumerate()
-                .filter(|(_, dist)| *dist < UNREACHABLE)
-                .min_by(|a, b| a.1.partial_cmp(b.1).unwrap())
-                .unwrap().0
-        );
+        mb.amulet_start = mb.find_most_distant();
         mb
     }
 
     fn fill(&mut self, tile: TileType) {
         self.map.tiles.iter_mut()
             .for_each(|t| *t = tile);
+    }
+
+    fn find_most_distant(&self) -> Point {
+        self.find_most_distant_from(self.player_start)
+    }
+
+    fn find_most_distant_from(&self, position: Point) -> Point {
+        let dijkstra_map = self.build_dijkstra_map(position);
+        const UNREACHABLE: &f32 = &f32::MAX; // basically calculate the furthest point from the player and plonk the amulet there
+
+        self.map.index_to_point2d(
+            dijkstra_map.map
+                .iter()
+                .enumerate()
+                .filter(|(_, dist)| *dist < UNREACHABLE)
+                .max_by(|a, b| a.1.partial_cmp(b.1).unwrap())
+                .unwrap().0
+        )
+    }
+
+    fn build_dijkstra_map(&self, position: Point) -> DijkstraMap {
+        DijkstraMap::new(
+            MAP_WIDTH, MAP_HEIGHT,
+            &[self.map.point2d_to_index(position)],
+            &self.map,
+            1024.0,
+        )
     }
 
     fn build_random_room(&mut self, rng: &mut RandomNumberGenerator) {

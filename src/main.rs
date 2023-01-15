@@ -1,10 +1,10 @@
 mod map;
-mod map_builder;
 mod camera;
 mod components;
 mod spawner;
 mod systems;
 mod turn_state;
+mod map_builder;
 
 mod prelude {
     pub use bracket_lib::prelude::*;
