@@ -129,3 +129,26 @@ impl FieldOfView {
         }
     }
 }
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct ProvidesHealing {
+    pub amount: i32,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct ProvidesManaRestore {
+    pub amount: i32,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct ProvidesDungeonMap;
+
+pub enum ItemRarity {
+    Poor,
+    Common,
+    Uncommon,
+    Rare,
+    Epic,
+    Legendary,
+    Artifact
+}

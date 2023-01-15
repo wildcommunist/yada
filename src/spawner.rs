@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use crate::prelude::ItemRarity::Poor;
 
 pub fn spawn_player(
     ecs: &mut World,
@@ -118,6 +119,57 @@ pub fn spawn_item(
                 glyph: to_cp437('|'),
             },
             NameLabel("Amulet of Yala".to_string())
+        )
+    );
+}
+
+pub fn spawn_loot_item(
+    ecs: &mut World,
+    rng: &mut RandomNumberGenerator,
+    position: Point,
+) {
+    let roll = rng.roll_dice(1, 6);
+
+    match roll {
+        1 => spawn_potion(ecs, position),
+        2 => spawn_dungeon_map(ecs, position),
+        3 => spawn_resource(ecs, rng, position),
+        _ => spawn_monster(ecs, rng, position)
+    }
+}
+
+fn spawn_potion(
+    ecs: &mut World,
+    position: Point,
+) {
+    ecs.push(
+        (
+            Item, position,
+            Render {
+                color: ColorPair::new(WHITE, BLACK),
+                glyph: to_cp437('!'),
+            },
+            ItemRarity::Poor,
+            ProvidesHealing { amount: 5 },
+            NameLabel("Insignificant healing potion".to_string())
+        )
+    );
+}
+
+fn spawn_dungeon_map(
+    ecs: &mut World,
+    position: Point,
+) {
+    ecs.push(
+        (
+            Item, position,
+            Render {
+                color: ColorPair::new(WHITE, BLACK),
+                glyph: to_cp437('{'),
+            },
+            ItemRarity::Rare,
+            ProvidesDungeonMap,
+            NameLabel("Map of the dungeon".to_string())
         )
     );
 }

@@ -49,6 +49,7 @@ impl MapBuilder {
         let mut architect: Box<dyn MapArchitect> = match rng.range(0, 3) {
             0 => Box::new(DrunkardsWalkArchitect {}),
             1 => Box::new(RoomArchitect {}),
+            2 => Box::new(EmptyArchitect {}),
             _ => Box::new(CellularAutomataArchitect {}),
         };
 

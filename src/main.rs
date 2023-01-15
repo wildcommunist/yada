@@ -57,7 +57,7 @@ impl State {
 
         map_builder.resource_spawns
             .iter()
-            .for_each(|monster_pos| spawn_resource(&mut ecs, &mut rng, *monster_pos));
+            .for_each(|monster_pos| spawn_loot_item(&mut ecs, &mut rng, *monster_pos));
 
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
