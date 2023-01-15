@@ -4,17 +4,25 @@ use crate::prelude::*;
 #[read_component(Player)]
 #[read_component(Health)]
 #[read_component(XP)]
+#[read_component(Item)]
+#[read_component(ItemRarity)]
+#[read_component(Carried)]
+#[read_component(NameLabel)]
 pub fn hud(
     ecs: &SubWorld
 ) {
     let mut health_query = <&Health>::query()
         .filter(component::<Player>());
-    let player_health = health_query //TODO: This will crash when player dies (because we are removing the entity)
+    let player_health = health_query
         .iter(ecs)
         .next()
         .unwrap();
     let mut xp_query = <&XP>::query()
         .filter(component::<Player>());
+    let player = <(Entity, &Player)>::query()
+        .iter(ecs)
+        .find_map(|(e, _)| Some(*e))
+        .unwrap();
     let player_xp = xp_query
         .iter(ecs)
         .next()
@@ -22,6 +30,20 @@ pub fn hud(
 
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(2);
+
+    let mut y = 3;
+    <(&Item, &NameLabel, &ItemRarity, &Carried)>::query()
+        .iter(ecs)
+        .filter(|(_, _, _, carried)| carried.0 == player)
+        .for_each(|(_, name, rarity, _)| {
+            // "draw" the inventory
+            draw_batch.print_color(Point::new(3, y), &name.0, ColorPair::from(*rarity));
+            y += 1;
+        });
+
+    if y > 3 {
+        draw_batch.print_color(Point::new(2, 2), "Inventory:", ColorPair::new(YELLOW, BLACK));
+    }
 
     // Draw the health bar
     draw_batch.bar_horizontal(

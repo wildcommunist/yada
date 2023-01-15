@@ -152,6 +152,22 @@ pub enum ItemRarity {
     Epic,
     Legendary,
     Artifact,
+    Unknown,
+}
+
+impl From<ItemRarity> for ColorPair {
+    fn from(value: ItemRarity) -> Self {
+        match value {
+            ItemRarity::Poor => ColorPair::new((157, 157, 157), BLACK),
+            ItemRarity::Common => ColorPair::new((255, 255, 255), BLACK),
+            ItemRarity::Uncommon => ColorPair::new((30, 255, 0), BLACK),
+            ItemRarity::Rare => ColorPair::new((0, 121, 221), BLACK),
+            ItemRarity::Epic => ColorPair::new((163, 53, 238), BLACK),
+            ItemRarity::Legendary => ColorPair::new((255, 128, 0), BLACK),
+            ItemRarity::Artifact => ColorPair::new((230, 204, 128), BLACK),
+            ItemRarity::Unknown => ColorPair::new((0, 204, 255), BLACK),
+        }
+    }
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
