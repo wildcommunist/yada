@@ -3,8 +3,6 @@ mod rooms;
 mod automata;
 
 use crate::map_builder::automata::CellularAutomataArchitect;
-use crate::map_builder::empty::EmptyArchitect;
-use crate::map_builder::rooms::RoomArchitect;
 use crate::prelude::*;
 
 trait MapArchitect {
@@ -71,10 +69,11 @@ impl MapBuilder {
     }
 
     fn build_random_room(&mut self, rng: &mut RandomNumberGenerator) {
+        //TODO: Fix rooms outside the level
         while self.rooms.len() < NUM_ROOMS {
             let room = Rect::with_size(
-                rng.range(1, MAP_WIDTH - 10),
-                rng.range(1, MAP_HEIGHT - 10),
+                rng.range(1, MAP_WIDTH - 1),
+                rng.range(1, MAP_HEIGHT - 1),
                 rng.range(3, 50),
                 rng.range(3, 50),
             );
@@ -135,5 +134,29 @@ impl MapBuilder {
                 self.apply_horizontal_tunnel(prev_room_center.x, current_room_center.x, current_room_center.y);
             }
         }
+    }
+
+    fn spawn_monsters(
+        &self,
+        start: &Point,
+        rng: &mut RandomNumberGenerator,
+    ) -> Vec<Point> {
+        const NUMBER_OF_MONSTERS: usize = 50;
+        const MIN_MONSTER_DISTANCE: f32 = 10.0;
+        let mut spawnable_tiles: Vec<Point> = self.map.tiles
+            .iter()
+            .enumerate()
+            .filter(|(idx, t)| {
+                **t == TileType::Floor && DistanceAlg::Pythagoras.distance2d(*start, self.map.index_to_point2d(*idx)) > MIN_MONSTER_DISTANCE
+            })
+            .map(|(idx, _)| self.map.index_to_point2d(idx))
+            .collect();
+        let mut spawns = Vec::new();
+        for _ in 0..NUMBER_OF_MONSTERS {
+            let target_index = rng.random_slice_index(&spawnable_tiles).unwrap();
+            spawns.push(spawnable_tiles[target_index]);
+            spawnable_tiles.remove(target_index);
+        }
+        spawns
     }
 }

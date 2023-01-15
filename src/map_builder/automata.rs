@@ -9,6 +9,16 @@ impl MapArchitect for CellularAutomataArchitect {
 
         self.random_noise_map(rng, &mut mb.map);
 
+        self.random_noise_map(rng, &mut mb.map);
+
+        for _ in 0..10 {
+            self.iteration(&mut mb.map);
+        }
+        let start = self.find_start(&mb.map);
+        mb.monster_spawns = mb.spawn_monsters(&start, rng);
+        mb.player_start = start;
+        mb.amulet_start = mb.find_most_distant();
+
         mb
     }
 }
@@ -59,14 +69,16 @@ impl CellularAutomataArchitect {
         map.tiles = new_tiles;
     }
 
-    fn find_Start(&self, map: &Map) -> Point {
+    fn find_start(&self, map: &Map) -> Point {
         let center = Point::new(MAP_WIDTH / 2, MAP_HEIGHT / 2);
         let closes_point = map.tiles
             .iter()
             .enumerate()
-            .filter(|(_, tile)| **tile == TileType::Floor)
-            .map(|(idx, _)| (idx, DistanceAlg::Pythagoras.distance2d(center, map.index_to_point2d(idx))))
-            .min_by(|(_, distance), (_, distance2)| distance.partial_cmp(&distance2).unwrap())
+            .filter(|(_, tile)| **tile == TileType::Floor)// Filter floor tiles only
+            .map(|(idx, _)| {// Calculate distance to tile use Pythagoras theorum
+                (idx, DistanceAlg::Pythagoras.distance2d(center, map.index_to_point2d(idx)))
+            })
+            .min_by(|(_, distance), (_, distance2)| distance.partial_cmp(distance2).unwrap())// Get the smallest of the two
             .map(|(idx, _)| idx)
             .unwrap();
 
