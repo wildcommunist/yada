@@ -5,14 +5,7 @@ pub struct EmptyArchitect {}
 
 impl MapArchitect for EmptyArchitect {
     fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder {
-        let mut mb = MapBuilder {
-            map: Map::new(),
-            rooms: Vec::new(),
-            monster_spawns: Vec::new(),
-            resource_spawns: Vec::new(),
-            player_start: Point::zero(),
-            amulet_start: Point::zero(),
-        };
+        let mut mb = MapBuilder::empty();
 
         mb.fill(TileType::Floor);
         mb.player_start = Point::new(rng.range(1, MAP_WIDTH), rng.range(1, MAP_HEIGHT));
