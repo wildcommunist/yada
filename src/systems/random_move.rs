@@ -32,7 +32,7 @@ pub fn random_move(
             positions
                 .iter(ecs)
                 .filter(|(_, target_pos)| **target_pos == destination)// Grab all targets at destination
-                .for_each(|(target, target_position)| {
+                .for_each(|(target, _target_position)| {
                     // we gotta make sure that if its an entity
                     // , we dont move there, if its a player, we attack
                     //TODO: Maybe monsters attack other factions?

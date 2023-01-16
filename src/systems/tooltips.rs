@@ -1,4 +1,3 @@
-use legion::world::ComponentError;
 use crate::prelude::*;
 
 #[system]
@@ -29,7 +28,7 @@ pub fn tooltip(
             let screen_pos = Point::new((*mouse_pos * 4).x, (*mouse_pos * 4).y - 1);
 
             let color = match ecs.entry_ref(*e)
-                .unwrap().get_component::<ItemRarity>(){
+                .unwrap().get_component::<ItemRarity>() {
                 Ok(r) => *r,
                 Err(_) => ItemRarity::Unknown
             };

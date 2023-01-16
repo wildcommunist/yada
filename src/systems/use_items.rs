@@ -22,7 +22,8 @@ pub fn use_items(
                     healing_to_apply.push((activate.user, healing.amount));
                 }
 
-                if let Ok(reveal) = item.get_component::<ProvidesDungeonMap>() {
+                if let Ok(_reveal) = item.get_component::<ProvidesDungeonMap>() {
+                    // Reveal the map
                     map.revealed_tiles.iter_mut().for_each(|t| *t = true);
                 }
             }

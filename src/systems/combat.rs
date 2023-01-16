@@ -1,4 +1,3 @@
-use legion::world::ComponentError;
 use crate::prelude::*;
 
 #[system]
