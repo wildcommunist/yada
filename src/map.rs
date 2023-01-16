@@ -6,6 +6,7 @@ const NUM_TILES: usize = (MAP_WIDTH * MAP_HEIGHT) as usize;
 pub enum TileType {
     Floor,
     Wall,
+    Portal,
 }
 
 pub struct Map {
@@ -46,7 +47,8 @@ impl Map {
     // Check if we can enter the tile. For now it just checks if the tile is floor
     pub fn can_enter_tile(&self, point: Point) -> bool {
         self.is_in_map_bounds(point) &&
-            self.tiles[Self::map_index(point.x, point.y)] == TileType::Floor
+            (self.tiles[Self::map_index(point.x, point.y)] == TileType::Floor
+                || self.tiles[Self::map_index(point.x, point.y)] == TileType::Portal)
     }
 
     // Determine valid exists from given location. So tile from which you are moving, can u go to the delta?

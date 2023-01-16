@@ -1,5 +1,4 @@
 use crate::prelude::*;
-use crate::prelude::ItemRarity::Poor;
 
 pub fn spawn_player(
     ecs: &mut World,
@@ -7,7 +6,7 @@ pub fn spawn_player(
 ) {
     let player = ecs.push(
         (
-            Player {},
+            Player { map_level: 0 },
             position,
             Render {
                 color: ColorPair::new(WHITE, BLACK),

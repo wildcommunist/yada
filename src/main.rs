@@ -45,10 +45,12 @@ impl State {
         let mut ecs = World::default();
         let mut resources = Resources::default();
         let mut rng = RandomNumberGenerator::new();
-        let map_builder = MapBuilder::new(&mut rng);
+        let mut map_builder = MapBuilder::new(&mut rng);
 
         spawn_player(&mut ecs, map_builder.player_start);
-        spawn_item(&mut ecs, map_builder.amulet_start);
+        //spawn_item(&mut ecs, map_builder.amulet_start);
+        let exit_idx = map_builder.map.point2d_to_index(map_builder.amulet_start);
+        map_builder.map.tiles[exit_idx] = TileType::Portal;
 
         map_builder.monster_spawns
             .iter()
@@ -107,10 +109,12 @@ impl State {
         self.ecs = World::default();
         self.resources = Resources::default();
         let mut rng = RandomNumberGenerator::new();
-        let map_builder = MapBuilder::new(&mut rng);
+        let mut map_builder = MapBuilder::new(&mut rng);
 
         spawn_player(&mut self.ecs, map_builder.player_start);
-        spawn_item(&mut self.ecs, map_builder.amulet_start);
+        //spawn_item(&mut self.ecs, map_builder.amulet_start);
+        let exit_idx = map_builder.map.point2d_to_index(map_builder.amulet_start);
+        map_builder.map.tiles[exit_idx] = TileType::Portal;
 
         map_builder.monster_spawns
             .iter()
@@ -126,6 +130,8 @@ impl State {
         self.resources.insert(TurnState::AwaitingInput);
         self.resources.insert(map_builder.theme);
     }
+
+    fn advance_level(&mut self) {}
 }
 
 impl GameState for State {
@@ -140,13 +146,14 @@ impl GameState for State {
         ctx.set_active_console(0);
         self.resources.insert(Point::from_tuple(ctx.mouse_pos()));
 
-        let current_state = self.resources.get::<TurnState>().unwrap().clone(); //I dont like this. Danger!
+        let current_state = *self.resources.get::<TurnState>().unwrap(); //I dont like this. Danger!
         match current_state {
             TurnState::AwaitingInput => self.input_system.execute(&mut self.ecs, &mut self.resources),
             TurnState::PlayerTurn => self.player_system.execute(&mut self.ecs, &mut self.resources),
             TurnState::WorldTurn => self.world_system.execute(&mut self.ecs, &mut self.resources),
             TurnState::GameOver => self.game_over(ctx),
             TurnState::Victory => self.victory(ctx),
+            TurnState::NextLevel => self.advance_level(),
         }
 
         render_draw_buffer(ctx).expect("Render error");
