@@ -29,6 +29,7 @@ mod prelude {
     pub use crate::turn_state::*;
 }
 
+use std::collections::HashSet;
 use std::process::exit;
 use prelude::*;
 
@@ -131,7 +132,70 @@ impl State {
         self.resources.insert(map_builder.theme);
     }
 
-    fn advance_level(&mut self) {}
+    fn advance_level(&mut self) {
+        let player_entity = *<Entity>::query()
+            .filter(component::<Player>())
+            .iter(&mut self.ecs)
+            .next()
+            .unwrap();
+        let mut entities_to_keep = HashSet::new();
+        entities_to_keep.insert(player_entity);
+
+        <(Entity, &Carried)>::query()
+            .iter(&self.ecs)
+            .filter(|(_e, carry)| carry.0 == player_entity)
+            .map(|(e, _)| *e)
+            .for_each(|e| { entities_to_keep.insert(e); });
+
+        let mut cb = CommandBuffer::new(&mut self.ecs);
+
+        for e in Entity::query().iter(&self.ecs) {
+            if !entities_to_keep.contains(e) {
+                cb.remove(*e);
+            }
+        }
+
+        cb.flush(&mut self.ecs, &mut self.resources);
+        <&mut FieldOfView>::query()
+            .iter_mut(&mut self.ecs)
+            .for_each(|fov| fov.is_dirty = true);
+
+        let mut rng = RandomNumberGenerator::new();
+        let mut map_builder = MapBuilder::new(&mut rng);
+        let mut map_level = 0;
+
+        <(&mut Player, &mut Point)>::query()
+            .iter_mut(&mut self.ecs)
+            .for_each(|(player, position)| {
+                player.map_level += 1;
+                map_level = player.map_level;
+                position.x = map_builder.player_start.x;
+                position.y = map_builder.player_start.y;
+            });
+
+        if map_level == 2 {
+            //spawn amulet
+            spawn_item(&mut self.ecs, map_builder.amulet_start);
+        } else {
+            // spawn another staircase
+            let exit_idx = map_builder.map.point2d_to_index(map_builder.amulet_start);
+            map_builder.map.tiles[exit_idx] = TileType::Portal;
+        }
+
+        map_builder.monster_spawns
+            .iter()
+            .for_each(|monster_pos| spawn_monster(&mut self.ecs, &mut rng, *monster_pos));
+
+
+        map_builder.resource_spawns
+            .iter()
+            .for_each(|resource_pos| spawn_resource(&mut self.ecs, &mut rng, *resource_pos));
+
+        self.resources.insert(map_builder.map);
+        self.resources.insert(Camera::new(map_builder.player_start));
+        self.resources.insert(TurnState::AwaitingInput);
+        self.resources.insert(map_builder.theme);
+    }
 }
 
 impl GameState for State {
