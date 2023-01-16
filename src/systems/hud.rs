@@ -19,10 +19,10 @@ pub fn hud(
         .unwrap();
     let mut xp_query = <&XP>::query()
         .filter(component::<Player>());
-    let player = <(Entity, &Player)>::query()
+    let (player_entity, player) = <(Entity, &Player)>::query()
         .iter(ecs)
         .next()
-        .map(|(e, _)| *e)
+        .map(|(e, player)| (*e, player))
         .unwrap();
     let player_xp = xp_query
         .iter(ecs)
@@ -32,10 +32,18 @@ pub fn hud(
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(2);
 
+    draw_batch.print_color_right(
+        Point::new(
+            SCREEN_WIDTH * 2,
+            3,
+        ), format!("Dungeon level: {}", player.map_level + 1),
+        ColorPair::new(YELLOW, BLACK),
+    );
+
     let mut y = 5;
     <(&Item, &NameLabel, &ItemRarity, &Carried)>::query()
         .iter(ecs)
-        .filter(|(_, _, _, carried)| carried.0 == player)
+        .filter(|(_, _, _, carried)| carried.0 == player_entity)
         .for_each(|(_, name, rarity, _)| {
             // "draw" the inventory
             draw_batch.print_color(Point::new(3, y), format!("{}. {}", y - 4, &name.0), ColorPair::from(*rarity));
