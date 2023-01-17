@@ -55,7 +55,7 @@ pub enum ResourceType {
     CopperOre,
     IronOre,
     MithrilOre,
-    Unknown
+    Unknown,
 }
 
 impl From<&String> for ResourceType {
@@ -65,6 +65,28 @@ impl From<&String> for ResourceType {
             "ironore" => ResourceType::IronOre,
             "mithrilore" => ResourceType::MithrilOre,
             _ => ResourceType::Unknown
+        }
+    }
+}
+
+impl From<ResourceType> for String {
+    fn from(value: ResourceType) -> Self {
+        match value {
+            ResourceType::CopperOre => String::from("Copper Ore"),
+            ResourceType::IronOre => String::from("Iron Ore"),
+            ResourceType::MithrilOre => String::from("Mithril Ore"),
+            ResourceType::Unknown => String::from("Unknown Ore"),
+        }
+    }
+}
+
+impl From<ResourceType> for ItemRarity {
+    fn from(value: ResourceType) -> Self {
+        match value {
+            ResourceType::CopperOre => ItemRarity::Common,
+            ResourceType::IronOre => ItemRarity::Uncommon,
+            ResourceType::MithrilOre => ItemRarity::Rare,
+            ResourceType::Unknown => ItemRarity::Poor
         }
     }
 }
@@ -79,6 +101,17 @@ impl Display for ResourceType {
 pub struct Resource {
     pub resource: ResourceType,
     pub amount: u8,
+}
+
+impl From<Resource> for String {
+    fn from(value: Resource) -> Self {
+        match value.resource {
+            ResourceType::CopperOre => String::from("Copper Ore"),
+            ResourceType::IronOre => String::from("Iron Ore"),
+            ResourceType::MithrilOre => String::from("Mithril Ore"),
+            ResourceType::Unknown => String::from("Unknown Ore"),
+        }
+    }
 }
 
 #[derive(Clone, PartialEq)]

@@ -27,7 +27,7 @@ pub fn tooltip(
         .for_each(|(e, _, name)| {
             let screen_pos = Point::new((*mouse_pos * 4).x, (*mouse_pos * 4).y - 1);
 
-            let color = match ecs.entry_ref(*e)
+            let item_rarity = match ecs.entry_ref(*e)
                 .unwrap().get_component::<ItemRarity>() {
                 Ok(r) => *r,
                 Err(_) => ItemRarity::Unknown
@@ -39,7 +39,7 @@ pub fn tooltip(
             } else {
                 name.0.clone()
             };
-            draw_batch.print_color(screen_pos, &display, ColorPair::from(color));
+            draw_batch.print_color(screen_pos, &display, ColorPair::from(item_rarity));
         });
 
     draw_batch.submit(10100).expect("Tooltip batch error");
