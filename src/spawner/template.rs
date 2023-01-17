@@ -104,7 +104,7 @@ impl Templates {
                 }
 
                 if let Some(provider) = &template.provides {
-                    provider.iter().for_each(|(provided, amount, amount2)| {
+                    provider.iter().for_each(|(provided, amount, _amount2)| {
                         match provided.to_lowercase().as_str() {
                             "mana" => {
                                 commands.add_component(entity, ProvidesManaRestore { amount: *amount });

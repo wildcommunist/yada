@@ -85,18 +85,6 @@ pub struct Resource {
 pub struct NameLabel(pub String);
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct WantsToPerformAction {
-    pub issuer: Entity,
-    pub action: Action,
-}
-
-#[derive(Copy, Clone, Debug, PartialEq)]
-pub enum Action {
-    Attack,
-    Gather,
-}
-
-#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct WantsToAttack {
     pub attacker: Entity,
     pub target: Entity,
