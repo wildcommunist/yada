@@ -9,7 +9,7 @@ pub fn entity_render(
     ecs: &SubWorld,
     #[resource] camera: &Camera,
 ) {
-    let mut renderables = <(&Point, &Render)>::query();
+    let mut render_query = <(&Point, &Render)>::query();
     let mut fov = <&FieldOfView>::query().filter(component::<Player>());
     let player_fov = fov.iter(ecs).next().unwrap();
 
@@ -18,7 +18,7 @@ pub fn entity_render(
     let offset = Point::new(camera.left_x, camera.top_y);
 
 
-    renderables
+    render_query
         .iter(ecs)
         .filter(|(pos, _)| player_fov.visible_tiles.contains(&pos))
         .for_each(|(pos, render)| {
@@ -28,6 +28,17 @@ pub fn entity_render(
                 render.glyph,
             );
         });
+
+    // We query specifically for the player so we render them "last" so they look on top of things
+    let mut player_render_query = <(&Point, &Render, &Player)>::query();
+    let (position, player) = player_render_query.iter(ecs)
+        .map(|(pos, render, _)| (pos, render))
+        .next().unwrap();
+    batch_draw.set(
+        *position - offset,
+        player.color,
+        player.glyph,
+    );
 
     batch_draw.submit(5000).expect("Failed to draw entities batch");
 }
