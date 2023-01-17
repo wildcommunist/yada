@@ -4,11 +4,12 @@ use crate::prelude::*;
 #[read_component(Point)]
 #[read_component(Player)]
 #[read_component(Resource)]
-#[write_component(Health)]
+#[write_component(HealthPool)]
 #[read_component(Collider)]
 #[read_component(Enemy)]
 #[read_component(Item)]
 #[read_component(Carried)]
+#[read_component(Weapon)]
 pub fn player_input(
     ecs: &mut SubWorld,
     commands: &mut CommandBuffer,
@@ -44,9 +45,19 @@ pub fn player_input(
                 let mut items_query = <(Entity, &Item, &Point)>::query();
                 items_query.iter(ecs)
                     .filter(|(_, _, &item_pos)| item_pos == player_position)
-                    .for_each(|(entity, _item, _item_pos)| {
-                        commands.remove_component::<Point>(*entity);
-                        commands.add_component(*entity, Carried(player_entity));
+                    .for_each(|(item_entity, _item, _item_pos)| {
+                        commands.remove_component::<Point>(*item_entity);
+                        commands.add_component(*item_entity, Carried(player_entity));
+
+                        // make sure player doesnt carry two weapons
+                        if let Ok(ent_ref) = ecs.entry_ref(player_entity) {
+                            <(Entity, &Carried, &Weapon)>::query().iter(ecs)
+                                .filter(|(_, c, _)| c.0 == player_entity)
+                                .for_each(|(ent, _, _)| {
+                                    commands.add_component(*ent, Point::new(player_position.x, player_position.y));
+                                    commands.remove_component::<Carried>(*ent);
+                                });
+                        }
                     });
                 Point::zero()
             }
@@ -99,7 +110,6 @@ pub fn player_input(
             }
         }
         if is_idle {
-
             /*
             if let Ok(health_component) = ecs
                 .entry_mut(player_entity)

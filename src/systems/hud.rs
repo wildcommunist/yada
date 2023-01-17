@@ -2,8 +2,8 @@ use crate::prelude::*;
 
 #[system]
 #[read_component(Player)]
-#[read_component(Health)]
-#[read_component(XP)]
+#[read_component(HealthPool)]
+#[read_component(XPPool)]
 #[read_component(Item)]
 #[read_component(ItemRarity)]
 #[read_component(Carried)]
@@ -11,13 +11,13 @@ use crate::prelude::*;
 pub fn hud(
     ecs: &SubWorld
 ) {
-    let mut health_query = <&Health>::query()
+    let mut health_query = <&HealthPool>::query()
         .filter(component::<Player>());
     let player_health = health_query
         .iter(ecs)
         .next()
         .unwrap();
-    let mut xp_query = <&XP>::query()
+    let mut xp_query = <&XPPool>::query()
         .filter(component::<Player>());
     let (player_entity, player) = <(Entity, &Player)>::query()
         .iter(ecs)

@@ -5,7 +5,7 @@ use crate::prelude::*;
 #[read_component(ProvidesHealing)]
 #[read_component(ProvidesManaRestore)]
 #[read_component(ProvidesDungeonMap)]
-#[write_component(Health)]
+#[write_component(HealthPool)]
 pub fn use_items(
     ecs: &mut SubWorld,
     commands: &mut CommandBuffer,
@@ -34,7 +34,7 @@ pub fn use_items(
 
     for heal in &healing_to_apply {
         if let Ok(mut target) = ecs.entry_mut(heal.0) {
-            if let Ok(health) = target.get_component_mut::<Health>() {
+            if let Ok(health) = target.get_component_mut::<HealthPool>() {
                 health.current = i32::min(health.max, health.current + heal.1);
             }
         }

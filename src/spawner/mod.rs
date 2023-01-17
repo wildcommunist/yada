@@ -9,14 +9,16 @@ pub fn spawn_player(
 ) {
     let player = ecs.push(
         (
+            NameLabel(String::from("Player")),
             Player { map_level: 0 },
             position,
             Render {
                 color: ColorPair::new(WHITE, BLACK),
                 glyph: to_cp437('@'),
             },
-            Health { current: 75, max: 150 },
-            XP { current: 0, max: 100 },
+            HealthPool { current: 50, max: 50 },
+            XPPool { current: 0, max: 100 },
+            Damage(1)
         )
     );
 

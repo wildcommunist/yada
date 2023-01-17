@@ -4,7 +4,7 @@ use crate::prelude::*;
 #[read_component(Point)]
 #[read_component(ChasingPlayer)]
 #[read_component(FieldOfView)]
-#[read_component(Health)]
+#[read_component(HealthPool)]
 #[read_component(Player)]
 pub fn chase(
     #[resource] map: &Map,
@@ -12,7 +12,7 @@ pub fn chase(
     commands: &mut CommandBuffer,
 ) {
     let mut movers = <(Entity, &Point, &ChasingPlayer, &FieldOfView)>::query();
-    let mut positions = <(Entity, &Point, &Health)>::query();
+    let mut positions = <(Entity, &Point, &HealthPool)>::query();
     let mut player = <(&Point, &Player)>::query();
 
     let player_position = player.iter(ecs).next().unwrap().0;

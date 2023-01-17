@@ -5,7 +5,7 @@ use crate::prelude::*;
 #[read_component(Collider)]
 #[read_component(Wanderer)]
 #[read_component(Resource)]
-#[read_component(Health)]
+#[read_component(HealthPool)]
 #[read_component(Player)]
 pub fn random_move(
     ecs: &SubWorld,

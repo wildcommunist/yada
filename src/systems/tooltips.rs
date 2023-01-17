@@ -2,7 +2,7 @@ use crate::prelude::*;
 
 #[system]
 #[read_component(Point)]
-#[read_component(Health)]
+#[read_component(HealthPool)]
 #[read_component(NameLabel)]
 #[read_component(FieldOfView)]
 #[read_component(Player)]
@@ -34,7 +34,7 @@ pub fn tooltip(
             };
 
             let display = if let Ok(health) = ecs.entry_ref(*e)
-                .unwrap().get_component::<Health>() {
+                .unwrap().get_component::<HealthPool>() {
                 format!("{} ({}/{})", name.0, health.current, health.max)
             } else {
                 name.0.clone()

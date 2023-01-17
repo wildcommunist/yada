@@ -33,21 +33,31 @@ pub struct WantsToMove {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct Health {
+pub struct HealthPool {
     pub current: i32,
     pub max: i32,
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct Mana {
+pub struct ManaPool {
     pub current: i32,
     pub max: i32,
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct XP {
+pub struct XPPool {
     pub current: i32,
     pub max: i32,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Weapon;
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Damage(pub u32);
+
+pub trait Modifier {
+    fn apply(&self) -> i32;
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]

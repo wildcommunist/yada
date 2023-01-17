@@ -1,7 +1,7 @@
 use crate::prelude::*;
 
 #[system]
-#[read_component(Health)]
+#[read_component(HealthPool)]
 #[read_component(Player)]
 #[read_component(Point)]
 #[read_component(AmuletOfYala)]
@@ -10,7 +10,7 @@ pub fn turn(
     #[resource] turn_state: &mut TurnState,
     #[resource] map: &Map,
 ) {
-    let mut player_hp = <(&Health, &Point)>::query().filter(component::<Player>());
+    let mut player_hp = <(&HealthPool, &Point)>::query().filter(component::<Player>());
     let mut amulet = <&Point>::query().filter(component::<AmuletOfYala>());
     let amulet_default_position = Point::new(-1, -1);
     let amulet_position = amulet
