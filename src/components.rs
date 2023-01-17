@@ -1,5 +1,6 @@
 use std::collections::HashSet;
 use std::fmt::{Display, Formatter};
+use serde::Deserialize;
 use crate::prelude::*;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -145,7 +146,7 @@ pub struct ProvidesManaRestore {
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct ProvidesDungeonMap;
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Deserialize, Debug, PartialEq)]
 pub enum ItemRarity {
     Poor,
     Common,

@@ -1,0 +1,71 @@
+Templates(
+    entities:[
+        Template(
+            entity_type: Item,
+            name: "Insignificant healing potion",
+            provides: Some([(Healing, 5)]),
+            icon: '!',
+            levels: [0, 1, 2],
+            quality: Some(Poor),
+            frequency: 2
+        ),
+        Template(
+            entity_type: Item,
+            name: "Insignificant healing potion",
+            provides: Some([(Mana, 3)]),
+            icon: '?',
+            levels: [0, 1, 2],
+            quality: Some(Poor),
+            frequency: 1
+        ),
+        Template(
+            entity_type: Item,
+            name: "Dungeon Map",
+            provides: Some([(MapReveal, 0)]),
+            icon: '{',
+            levels: [0, 1, 2],
+            quality: Some(Poor),
+            frequency: 1
+        ),
+        Template(
+            entity_type: Enemy,
+            name: "Goblin",
+            icon: 'g',
+            levels: [0, 1, 2],
+            hp: Some(3),
+            frequency: 4
+        ),
+        Template(
+            entity_type: Enemy,
+            name: "Orc",
+            icon: 'o',
+            levels: [1, 2],
+            hp: Some(6),
+            frequency: 2
+        ),
+        Template(
+            entity_type: Resource,
+            name: "Copper mine",
+            provides: Some([(CopperOre, 2, Some(6))]),
+            icon: 'C',
+            levels: [0, 1, 2],
+            frequency: 3
+        ),
+        Template(
+            entity_type: Resource,
+            name: "Iron mine",
+            provides: Some([(IronOre, 2, Some(4))]),
+            icon: 'I',
+            levels: [1, 2],
+            frequency: 2
+        ),
+        Template(
+            entity_type: Resource,
+            name: "Mithril mine",
+            provides: Some([(MithrilOre, 1, Some(3))]),
+            icon: 'M',
+            levels: [2],
+            frequency: 1
+        )
+    ]
+)

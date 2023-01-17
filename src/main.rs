@@ -155,7 +155,7 @@ impl State {
             }
         }
 
-        cb.flush(&mut self.ecs, &mut self.resources);
+        cb.flush(&mut self.ecs);
         <&mut FieldOfView>::query()
             .iter_mut(&mut self.ecs)
             .for_each(|fov| fov.is_dirty = true);

@@ -1,3 +1,5 @@
+mod template;
+
 use crate::prelude::*;
 
 pub fn spawn_player(
