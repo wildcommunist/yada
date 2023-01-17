@@ -52,12 +52,21 @@ pub struct XP {
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum ResourceType {
-    Coal,
-    Mithril,
-    Adamatite,
-    Crokite,
-    Silver,
-    Gold,
+    CopperOre,
+    IronOre,
+    MithrilOre,
+    Unknown
+}
+
+impl From<&String> for ResourceType {
+    fn from(value: &String) -> Self {
+        match value.to_lowercase().as_str() {
+            "copperore" => ResourceType::CopperOre,
+            "ironore" => ResourceType::IronOre,
+            "mithrilore" => ResourceType::MithrilOre,
+            _ => ResourceType::Unknown
+        }
+    }
 }
 
 impl Display for ResourceType {

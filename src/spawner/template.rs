@@ -58,7 +58,7 @@ impl Templates {
         spawn_points.iter().for_each(|sp| {
             if let Some(entity) = rng.random_slice_entry(&available_entities) {
                 // pick a random entity for the spawn point from the vec
-                self.spawn_entity(sp, entity, &mut commands);
+                self.spawn_entity(sp, entity, &mut commands, rng);
             }
         });
         commands.flush(ecs);
@@ -69,6 +69,7 @@ impl Templates {
         position: &Point,
         template: &Template,
         commands: &mut CommandBuffer,
+        rng: &mut RandomNumberGenerator,
     ) {
         let entity = commands.push(
             (
@@ -83,6 +84,9 @@ impl Templates {
 
         match template.entity_type {
             EntityType::Enemy => {
+                if let Some(q) = template.quality {
+                    commands.add_component(entity, q);
+                }
                 commands.add_component(entity, Enemy {});
                 commands.add_component(entity, Collider {});
                 commands.add_component(entity, Wanderer {});
@@ -98,9 +102,38 @@ impl Templates {
                 if let Some(q) = template.quality {
                     commands.add_component(entity, q);
                 }
+
+                if let Some(provider) = &template.provides {
+                    provider.iter().for_each(|(provided, amount, amount2)| {
+                        match provided.to_lowercase().as_str() {
+                            "mana" => {
+                                commands.add_component(entity, ProvidesManaRestore { amount: *amount });
+                            }
+                            "health" => {
+                                commands.add_component(entity, ProvidesHealing { amount: *amount });
+                            }
+                            "mapreveal" => {
+                                commands.add_component(entity, ProvidesDungeonMap)
+                            }
+                            _ => {}
+                        }
+                    });
+                }
             }
             EntityType::Resource => {
-                commands.add_component(entity, Resource { resource: ResourceType::Coal, amount: 0 }) //TODO: resource types
+                if let Some(provider) = &template.provides {
+                    provider.iter().for_each(|(item, range_start, range_end)| {
+                        let resource = ResourceType::from(item);
+                        let max_amount = range_end.unwrap_or(*range_start + 1);
+                        commands.add_component(entity, Collider {});
+                        commands.add_component(
+                            entity, Resource {
+                                resource,
+                                amount: rng.range(*range_start, max_amount) as u8,
+                            },
+                        ); //TODO: resource types
+                    });
+                }
             }
         }
     }

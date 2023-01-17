@@ -3,7 +3,7 @@ Templates(
         Template(
             entity_type: Item,
             name: "Insignificant healing potion",
-            provides: Some([(Healing, 5)]),
+            provides: Some([("health", 5, None)]),
             icon: '!',
             levels: [0, 1, 2],
             quality: Some(Poor),
@@ -11,20 +11,20 @@ Templates(
         ),
         Template(
             entity_type: Item,
-            name: "Insignificant healing potion",
-            provides: Some([(Mana, 3)]),
+            name: "Small mana potion",
+            provides: Some([("mana", 5, None)]),
             icon: '?',
             levels: [0, 1, 2],
-            quality: Some(Poor),
+            quality: Some(Common),
             frequency: 1
         ),
         Template(
             entity_type: Item,
             name: "Dungeon Map",
-            provides: Some([(MapReveal, 0)]),
+            provides: Some([("mapreveal", 0, None)]),
             icon: '{',
             levels: [0, 1, 2],
-            quality: Some(Poor),
+            quality: Some(Uncommon),
             frequency: 1
         ),
         Template(
@@ -33,6 +33,7 @@ Templates(
             icon: 'g',
             levels: [0, 1, 2],
             hp: Some(3),
+            quality: Some(Poor),
             frequency: 4
         ),
         Template(
@@ -41,12 +42,22 @@ Templates(
             icon: 'o',
             levels: [1, 2],
             hp: Some(6),
+            quality: Some(Common),
+            frequency: 2
+        ),
+        Template(
+            entity_type: Enemy,
+            name: "Orc VII",
+            icon: 'o',
+            levels: [2],
+            hp: Some(12),
+            quality: Some(Rare),
             frequency: 2
         ),
         Template(
             entity_type: Resource,
             name: "Copper mine",
-            provides: Some([(CopperOre, 2, Some(6))]),
+            provides: Some([("CopperOre", 2, Some(6))]),
             icon: 'C',
             levels: [0, 1, 2],
             frequency: 3
@@ -54,7 +65,7 @@ Templates(
         Template(
             entity_type: Resource,
             name: "Iron mine",
-            provides: Some([(IronOre, 2, Some(4))]),
+            provides: Some([("IronOre", 2, Some(4))]),
             icon: 'I',
             levels: [1, 2],
             frequency: 2
@@ -62,7 +73,7 @@ Templates(
         Template(
             entity_type: Resource,
             name: "Mithril mine",
-            provides: Some([(MithrilOre, 1, Some(3))]),
+            provides: Some([("MithrilOre", 1, Some(3))]),
             icon: 'M',
             levels: [2],
             frequency: 1

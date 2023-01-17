@@ -53,14 +53,7 @@ impl State {
         let exit_idx = map_builder.map.point2d_to_index(map_builder.amulet_start);
         map_builder.map.tiles[exit_idx] = TileType::Portal;
 
-        map_builder.monster_spawns
-            .iter()
-            .for_each(|monster_pos| spawn_monster(&mut ecs, &mut rng, *monster_pos));
-
-
-        map_builder.resource_spawns
-            .iter()
-            .for_each(|monster_pos| spawn_loot_item(&mut ecs, &mut rng, *monster_pos));
+        spawn_level(&mut ecs, &mut rng, 0, &map_builder.monster_spawns);
 
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
@@ -117,14 +110,7 @@ impl State {
         let exit_idx = map_builder.map.point2d_to_index(map_builder.amulet_start);
         map_builder.map.tiles[exit_idx] = TileType::Portal;
 
-        map_builder.monster_spawns
-            .iter()
-            .for_each(|monster_pos| spawn_monster(&mut self.ecs, &mut rng, *monster_pos));
-
-
-        map_builder.resource_spawns
-            .iter()
-            .for_each(|resource_pos| spawn_resource(&mut self.ecs, &mut rng, *resource_pos));
+        spawn_level(&mut self.ecs, &mut rng, 0, &map_builder.monster_spawns);
 
         self.resources.insert(map_builder.map);
         self.resources.insert(Camera::new(map_builder.player_start));
@@ -182,14 +168,7 @@ impl State {
             map_builder.map.tiles[exit_idx] = TileType::Portal;
         }
 
-        map_builder.monster_spawns
-            .iter()
-            .for_each(|monster_pos| spawn_monster(&mut self.ecs, &mut rng, *monster_pos));
-
-
-        map_builder.resource_spawns
-            .iter()
-            .for_each(|resource_pos| spawn_resource(&mut self.ecs, &mut rng, *resource_pos));
+        spawn_level(&mut self.ecs, &mut rng, map_level as usize, &map_builder.monster_spawns);
 
         self.resources.insert(map_builder.map);
         self.resources.insert(Camera::new(map_builder.player_start));
