@@ -49,14 +49,25 @@ pub fn player_input(
                         commands.remove_component::<Point>(*item_entity);
                         commands.add_component(*item_entity, Carried(player_entity));
 
-                        // make sure player doesnt carry two weapons
-                        if let Ok(ent_ref) = ecs.entry_ref(player_entity) {
-                            <(Entity, &Carried, &Weapon)>::query().iter(ecs)
-                                .filter(|(_, c, _)| c.0 == player_entity)
-                                .for_each(|(ent, _, _)| {
-                                    commands.add_component(*ent, Point::new(player_position.x, player_position.y));
-                                    commands.remove_component::<Carried>(*ent);
-                                });
+                        let item_ref = ecs.entry_ref(*item_entity);
+                        // Is this a weapon we picked up
+                        let mut is_weapon = false;
+                        if let Ok(item) = item_ref {
+                            if item.get_component::<Weapon>().is_ok() {
+                                is_weapon = true;
+                            }
+                        }
+
+                        if is_weapon {
+                            // we only need to drop the other weapon if we picking up another
+                            if let Ok(ent_ref) = ecs.entry_ref(player_entity) {
+                                <(Entity, &Carried, &Weapon)>::query().iter(ecs)
+                                    .filter(|(_, c, _)| c.0 == player_entity)
+                                    .for_each(|(ent, _, _)| {
+                                        commands.add_component(*ent, Point::new(player_position.x, player_position.y));
+                                        commands.remove_component::<Carried>(*ent);
+                                    });
+                            }
                         }
                     });
                 Point::zero()

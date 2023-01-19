@@ -32,8 +32,10 @@ pub fn combat(
 
         let base_damage = if let Ok(ent_ref) = ecs.entry_ref(*attacker) {
             if let Ok(d) = ent_ref.get_component::<Damage>() {
+                println!("Base damage: {}", d.0);
                 d.0
             } else {
+                println!("No base damage");
                 0
             }
         } else {

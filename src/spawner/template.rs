@@ -98,6 +98,10 @@ impl Templates {
                 if let Some(hp) = template.hp {
                     commands.add_component(entity, HealthPool { current: hp, max: hp });
                 }
+
+                if let Some(damage) = &template.base_damage {
+                    commands.add_component(entity, Damage(*damage as u32)); //TODO: What if we have an item that increase base damage but is not a weapon?
+                }
             }
             EntityType::Item => {
                 commands.add_component(entity, Item);
