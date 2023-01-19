@@ -221,3 +221,12 @@ pub struct ActivateItem {
     pub user: Entity,
     pub item: Entity,
 }
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct Skill {
+    pub name: String,
+    pub level: i32,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct Skills(pub Vec<Skill>);
