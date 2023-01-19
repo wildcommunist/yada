@@ -3,6 +3,8 @@ use crate::prelude::*;
 #[system(for_each)]
 #[read_component(Player)]
 #[read_component(FieldOfView)]
+#[read_component(Collider)]
+#[read_component(Point)]
 pub fn movement(
     entity: &Entity,
     want_move: &WantsToMove,
@@ -27,10 +29,25 @@ pub fn movement(
             }
         }
 
-        commands.add_component(
-            want_move.entity,
-            want_move.point,
-        ); // This will replace the `Point` component on the `Entity` if it exists. The only point component we have on entities are their positions
+        // Check that no1 has moved there already
+        let mut positions = <(Entity, &Point)>::query().filter(component::<Collider>() | component::<Player>());
+
+        let mut tile_taken = false;
+
+        if positions.iter(ecs)
+            .filter(|(_, pos)| **pos == want_move.point).count() > 0 {
+            // there is somebody there already, touch tits
+            println!("Tile {} {} is already taken", want_move.point.x, want_move.point.y);
+            tile_taken = true;
+        }
+
+        if !tile_taken { // Still doesnt work.
+            // Update the Point component of the entity (effectively "move")
+            commands.add_component(
+                want_move.entity,
+                want_move.point,
+            ); // This will replace the `Point` component on the `Entity` if it exists. The only point component we have on entities are their positions
+        }
     }
     commands.remove(*entity);
 }

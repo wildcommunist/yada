@@ -60,7 +60,7 @@ pub fn combat(
 
             // To make player not take damage
             //if !is_player {
-            //    health_component.current -= 1;
+            //    health_component.current -= attacker_damage;
             //}
             health_component.current -= attacker_damage; //TODO: Determine hit amount based on gear
 

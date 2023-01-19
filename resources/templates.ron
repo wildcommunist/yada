@@ -62,7 +62,7 @@ Templates(
             hp: Some(3),
             quality: Some(Poor),
             base_damage: Some(2),
-            frequency: 4
+            frequency: 115
         ),
         Template(
             entity_type: Enemy,
@@ -72,7 +72,7 @@ Templates(
             hp: Some(6),
             quality: Some(Common),
             base_damage: Some(3),
-            frequency: 2
+            frequency: 10
         ),
         Template(
             entity_type: Enemy,
@@ -82,7 +82,7 @@ Templates(
             hp: Some(12),
             quality: Some(Rare),
             base_damage: Some(4),
-            frequency: 1
+            frequency: 5
         ),
         Template(
             entity_type: Resource,
